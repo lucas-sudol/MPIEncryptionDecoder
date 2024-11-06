@@ -1,16 +1,15 @@
 CC = gcc
 
-CFLAGS = -Wall -g -std=c11 -lpthread -O0
+CFLAGS = -Wall -g -std=c11 -O0
 SERIALFLAGS = -Wall -g -std=c11 -O0
 
-all: A1 serial
+all: a2encrypt
 
-A1: main.c queue.c queue.h
-	$(CC) $(CFLAGS) main.c queue.c -o A1
+a2encrypt: a2encrypt.c
+	$(CC) $(CFLAGS) a2encrypt.c -o a2encrypt
 
-serial: serial.c
-	$(CC) $(SERIALFLAGS) serial.c -o serial
+#serial: serial.c $(CC) $(CFLAGS) serial.c -o serial
 
 clean:  
-	rm -f A1 serial
+	rm -f a2encrypt
 
