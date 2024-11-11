@@ -3,7 +3,9 @@
 A2 - MPI Based Decryption
 
 ## Description
-Uses linux MPI to to perform thread based scheudling of decryption
+Uses linux MPI to to perform process based scheudling of decryption
+
+Workload is divided by giving each process a branch of the permutations, done with a different starting letter in the encrypted dictionary
 
 ## Getting Started
 
@@ -16,12 +18,13 @@ Linux 3090 Docker Containter
 * How to build and run the program
 make all
 
-./A1 fileName flag (true/false print output)
+./a2encrypt "(input string)" - provide string to be encrypted
+
+./a2decrypt_serial (cipher txt file) (system dictionary txt file)
+
+mpiexec -n (process count )./a2decrypt (cipher txt file) (system dictionary txt file)
 
 * include the expected output
-
-A1
-serial
 
 
 ## Limitations
