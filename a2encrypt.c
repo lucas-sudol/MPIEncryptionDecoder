@@ -25,9 +25,11 @@ int main(int argc, char **argv) {
     char encryptionString[strlen(argv[1]) + 1];
     strcpy(encryptionString, argv[1]);
 
+    printf("input string: %s\n\n", encryptionString);
+
     //Find Unique letters
     uniqueLetters(argv[1], inputDictionary);
-    printf("unique letters:\n %s, %ld\n", inputDictionary, strlen(inputDictionary));
+    printf("input dictionary: %s\n", inputDictionary);
 
     //Initialize empty encryption dictionary
     char encryptionDictionary[strlen(inputDictionary) + 1];
@@ -35,15 +37,16 @@ int main(int argc, char **argv) {
 
     //Randomize encryption dictionary
     randomize(inputDictionary, encryptionDictionary);
-    printf("encryption dictionary:\n %s, %ld\n", encryptionDictionary, strlen(encryptionDictionary));
+    printf("encryption dictionary: %s\n\n", encryptionDictionary);
 
     //Encrypt string
     encryptString(inputDictionary, encryptionDictionary, encryptionString);
-    printf("Encrypted string: %s\n", encryptionString);
+    printf("encrypted string: %s\n", encryptionString);
 
-     FILE* fp = fopen(FILENAME, "w");
-     fprintf(fp, encryptionString);
-     fclose(fp);
+    //Write to file
+    FILE* fp = fopen(FILENAME, "w");
+    fprintf(fp, encryptionString);
+    fclose(fp);
     
     return 0;
 }

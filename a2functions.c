@@ -29,7 +29,6 @@ void randomize(char * uniqueArray, char *outputArray) {
 
     srand(time(NULL)); //Use time as seed
     while(count < strlen(uniqueArray)) {
-
         random =  rand() % ((int) strlen(uniqueArray));
 
         if(outputArray[random] == '\0') {
@@ -58,48 +57,153 @@ char* strdup(char * old) {
     return newString;
 }
 
-int permutations(char* array, int n, char* permutation, int index, char* inputDict, char* finalString) {
-    char* newArr;
-    char* newPermutation;
-    char* finalStringDecrypted;
-    int count = 0;
+int checkDictionary(char *string, struct trie * parent) {
+    char * token = strtok(string, " ?:;.,!\0");
+    while(token != NULL){
+        //Check trie if word exists in dictionary
+        if(!((long int) (trie_search(parent, token)))) {
+            return 0; //If it doesnt, exit spell checker
+        }
+        token = strtok(NULL, " ?:;.,!\0"); //Fetch next word
+    }
 
-    //Base Case - check if combination array is empty
-    if(n < 1){
-        //Print permutation and free resources
-        fprintf(stderr, "Key: %s\n", permutation);
+    return 1; //Passed spellcheck
+}
 
-        finalStringDecrypted = strdup(finalString);
-        encryptString(inputDict, permutation, finalStringDecrypted);
-        fprintf(stderr, "Decrypted: %s\n", finalStringDecrypted);
+
+//Modified permutation algorithm cited from https://www.geeksforgeeks.org/write-a-c-program-to-print-all-permutations-of-a-given-string/
+
+// Function to print permutations of the string
+// This function takes two parameters:
+// 1. String
+// 2. Starting index of the string.
+void permuteRec(char* str, int idx, int n, char * dict, char * finalString , struct trie * parent) {
+    // Base case
+    if (idx == n - 1) {
+        char * finalStringDecrypted = strdup(finalString);
+        encryptString(dict, str, finalStringDecrypted); //Find possible string with permutation
+        char* nontokenizedString = strdup(finalStringDecrypted); //Save copy (strtok destroys string)
+
+
+        if(checkDictionary(finalStringDecrypted, parent)) {
+            //Print decrypted string
+           fprintf(stderr, "Decrypted string: %s\n", nontokenizedString); 
+        }
 
         free(finalStringDecrypted);
-        free(array);
-        free(permutation);
-        return 1;
+        free(nontokenizedString);
+        return;
     }
-
-    //Create branches of characters in array
     else {
-        for(int i = 0; i < strlen(array); i++){
-            //Check for empty characters
-            if(array[i] != -1) {
-                //Create new array with current character missing
-                newArr = strdup(array);
-                newArr[i] = -1;
+        char temp;
+        for (int i = idx; i < n; i++) {
+            // Swapping
+            temp = str[idx];
+            str[idx] = str[i];
+            str[i] = temp;
 
-                //Add character to new permutation
-                newPermutation = strdup(permutation);
-                newPermutation[index] = array[i];
+            // First idx+1 characters fixed
+            permuteRec(str, idx + 1, n, dict, finalString, parent);
 
-                //Recursively call permutations and store count
-                count += permutations(newArr, n-1, newPermutation, index + 1, inputDict, finalString);
-            }
+            // Backtrack
+            str[i] = str[idx];
+            str[idx] = temp;
         }
+        return;
+    }
+}
+
+void decrypt_MPI(char* dict, char * encryptedString, int num_threads, int thread_id, char* results) {
+    FILE* dictFp = fopen(dict, "r");
+
+    char inputDictionary[strlen(encryptedString) + 1];
+    uniqueLetters(encryptedString, inputDictionary);
+
+    struct trie * parent = trie_create();
+    char * buffer = calloc(MAXLINE, 1);
+
+    //Create trie dictionary
+    while (fgets(buffer, MAXLINE, dictFp)) {
+        // Remove newline character if present
+        buffer[strcspn(buffer, "\n")] = '\0';
+
+        // Convert each character to lowercase
+        for (int i = 0; buffer[i] != '\0'; i++) {
+            buffer[i] = tolower(buffer[i]);
+        }
+            // Insert the word into the trie
+        trie_insert(parent, buffer, (void *)1);
     }
 
-    //Free resources and return count
-    free(array);
-    free(permutation);
-    return count;
+
+    char temp;
+    char * newDict;
+    char* unique = strdup(inputDictionary); //Copy dictionary since it is being when dividing work
+    int base_chunk_size = strlen(inputDictionary) / num_threads;  // Minimum number of tasks per thread
+    int remainder = strlen(inputDictionary) % num_threads;         // Extra tasks to be distributed among threads
+
+    // Starting index for the current thread (distribute extra tasks round-robin)
+    int start_index = thread_id * base_chunk_size + (thread_id < remainder ? thread_id : remainder);
+
+    // Ending index for the current thread
+    int end_index = start_index + base_chunk_size + (thread_id < remainder ? 1 : 0);
+
+    // Output the task (indexes) assigned to this thread
+    for (int i = start_index; i < end_index; i++) {
+        temp = inputDictionary[0];
+        inputDictionary[0] = inputDictionary[i];
+        inputDictionary[i] = temp;
+
+        //Print off encrypted keys with different starting letters - splitting the workload by different permutation branches
+        fprintf(stderr, "Rank %d: is %s\n", thread_id, inputDictionary);
+        newDict = strdup(inputDictionary);
+        permuteRec_MPI(newDict, 1, strlen(inputDictionary), unique, encryptedString, parent, results);
+
+        // Backtrack
+        inputDictionary[i] = inputDictionary[0];
+        inputDictionary[0] = temp;
+        free(newDict);
+    }
+
+    free(buffer);
+    trie_free(parent);
+    free(unique);
+}
+
+
+void permuteRec_MPI(char* str, int idx, int n, char * dict, char * finalString , struct trie * parent, char* results) {
+    // Base case
+    if (idx == n - 1) {
+        char * finalStringDecrypted = strdup(finalString);
+        encryptString(dict, str, finalStringDecrypted); //Find possible string with permutation
+        char* nontokenizedString = strdup(finalStringDecrypted); //Save copy (strtok destroys string)
+
+
+        if(checkDictionary(finalStringDecrypted, parent)) {
+            //Print decrypted string
+            strcat(results, nontokenizedString);
+            strcat(results, "\n");
+        }
+
+        free(finalStringDecrypted);
+        free(nontokenizedString);
+        return;
+    }
+    else {
+        char temp;
+        for (int i = idx; i < n; i++) {
+            // Swapping
+            temp = str[idx];
+            str[idx] = str[i];
+            str[i] = temp;
+
+            // First idx+1 characters fixed
+            permuteRec_MPI(str, idx + 1, n, dict, finalString, parent, results);
+
+            // Backtrack
+            str[i] = str[idx];
+            str[idx] = temp;
+        }
+        return;
+    }
 }
