@@ -155,7 +155,7 @@ void decrypt_MPI(char* dict, char * encryptedString, int num_threads, int thread
         inputDictionary[i] = temp;
 
         //Print off encrypted keys with different starting letters - splitting the workload by different permutation branches
-        fprintf(stderr, "Rank %d: is %s\n", thread_id, inputDictionary);
+        //fprintf(stderr, "Rank %d: is %s\n", thread_id, inputDictionary);
         newDict = strdup(inputDictionary);
         permuteRec_MPI(newDict, 1, strlen(inputDictionary), unique, encryptedString, parent, results);
 
@@ -164,8 +164,9 @@ void decrypt_MPI(char* dict, char * encryptedString, int num_threads, int thread
         inputDictionary[0] = temp;
         free(newDict);
     }
-
+    fclose(dictFp);
     free(buffer);
+
     trie_free(parent);
     free(unique);
 }

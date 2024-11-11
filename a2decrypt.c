@@ -30,7 +30,6 @@ int main(int argc, char **argv) {
         MPI_Recv(dict, MAXLINE, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         MPI_Recv(encryptedString, MAXLINE, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-
         decrypt_MPI(dict, encryptedString, comm_sz, my_rank, results);
 
         //Send results to main
@@ -86,6 +85,9 @@ int main(int argc, char **argv) {
             if(strlen(results) > 0)
                 fprintf(stderr, "Rank %d:\n%s", q, results);
         }
+
+        fclose(cyptherFp);
+        fclose(dictFp);
    }
 
     MPI_Finalize(); 
