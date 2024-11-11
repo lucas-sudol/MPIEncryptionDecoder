@@ -33,13 +33,12 @@ int main(int argc, char **argv) {
 
     //Save string from file
     fgets(encryptedString, sizeof(encryptedString), cyptherFp);
-    fprintf(stderr, "input string: %s \n", encryptedString);
+    fprintf(stdout, "input string: %s \n", encryptedString);
 
     //Find Unique letters
     char inputDictionary[strlen(encryptedString) + 1];
     uniqueLetters(encryptedString, inputDictionary);
-
-     fprintf(stderr, "list of letters in the string: %s  (%ld unique characters)\n\n", inputDictionary, strlen(inputDictionary));
+    fprintf(stdout, "list of letters in the string: %s  (%ld unique characters)\n\n", inputDictionary, strlen(inputDictionary));
 
     // Create Trie
     struct trie * parent = trie_create();
@@ -60,7 +59,16 @@ int main(int argc, char **argv) {
     
     //Call function to traverse permutations
     char * newDict = strdup(inputDictionary);
-    permuteRec(newDict, 0, strlen(inputDictionary), inputDictionary, encryptedString, parent);
+
+    //Generic call to calculate MPI permutations
+    char results [MAXRESULT];
+    results[0] = '\0';
+
+    permuteRec_MPI(newDict, 0, strlen(inputDictionary), inputDictionary, encryptedString, parent, results);
+
+    fprintf(stdout, "\tResults\n");
+    if(strlen(results) > 0)
+        fprintf(stdout, "%s",results);
 
     free(newDict);
     free(buffer);

@@ -26,10 +26,12 @@ int main(int argc, char **argv) {
     if (my_rank != 0) { 
         char results [MAXRESULT];
         results[0] = '\0';
+
         //Receive dictionary name and string from main thread
         MPI_Recv(dict, MAXLINE, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         MPI_Recv(encryptedString, MAXLINE, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
+        //Call function to calculate permutations and save to results
         decrypt_MPI(dict, encryptedString, comm_sz, my_rank, results);
 
         //Send results to main
@@ -60,7 +62,12 @@ int main(int argc, char **argv) {
 
         //Save string from file
         fgets(encryptedString, MAXLINE, cyptherFp);
-        fprintf(stderr, "input string to the MPI functions: %s \n", encryptedString);
+        fprintf(stdout, "input string to the MPI functions: %s \n", encryptedString);
+
+        //Print unique letters
+        char inputDictionary[strlen(encryptedString) + 1];
+        uniqueLetters(encryptedString, inputDictionary);
+        fprintf(stdout, "list of letters in the string: %s  (%ld unique characters)\n\n", inputDictionary, strlen(inputDictionary));
         
         for (int q = 1; q < comm_sz; q++) {
          /* Receive message from some process */
@@ -71,21 +78,19 @@ int main(int argc, char **argv) {
         //Generic call to calculate MPI permutations
         char results [MAXRESULT];
         results[0] = '\0';
-
         decrypt_MPI(argv[2], encryptedString, comm_sz, my_rank, results);
 
-        fprintf(stderr, "\n\tResults\n");
+        //Print results for main thread
+        fprintf(stdout, "\tResults\n");
         if(strlen(results) > 0)
-            fprintf(stderr, "Rank %d:\n%s", my_rank, results);
+            fprintf(stdout, "Rank %d:\n%s", my_rank, results);
 
-        //Collect results from other proccesses
+        //Collect results from other proccesses and print
         for (int q = 1; q < comm_sz; q++) {
-         /* Receive message from some process */
             MPI_Recv(results,  MAXRESULT, MPI_CHAR, q, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             if(strlen(results) > 0)
-                fprintf(stderr, "Rank %d:\n%s", q, results);
+                fprintf(stdout, "Rank %d:\n%s", q, results);
         }
-
         fclose(cyptherFp);
         fclose(dictFp);
    }
