@@ -1,0 +1,68 @@
+Starting tests...
+Testing word: cat
+Serial Output (filtered):
+cat
+act
+MPI Output (filtered):
+cat
+act
+Test passed for word 'cat': Outputs match.
+
+Testing word: code
+Serial Output (filtered):
+coed
+code
+MPI Output (filtered):
+coed
+code
+Test passed for word 'code': Outputs match.
+
+Testing word: apple
+Serial Output (filtered):
+apple
+MPI Output (filtered):
+apple
+Test passed for word 'apple': Outputs match.
+
+Testing word: garden
+Serial Output (filtered):
+ranged
+danger
+garden
+gander
+MPI Output (filtered):
+ranged
+danger
+garden
+gander
+Test passed for word 'garden': Outputs match.
+
+Testing word: freedom
+Serial Output (filtered):
+freedom
+MPI Output (filtered):
+freedom
+Test passed for word 'freedom': Outputs match.
+
+Testing word: computer
+Serial Output (filtered):
+computer
+MPI Output (filtered):
+computer
+Test passed for word 'computer': Outputs match.
+
+Testing word: attention
+Serial Output (filtered):
+attention
+MPI Output (filtered):
+attention
+Test passed for word 'attention': Outputs match.
+
+Testing word: impression
+Serial Output (filtered):
+impression
+MPI Output (filtered):
+impression
+Test passed for word 'impression': Outputs match.
+
+Testing complete.
