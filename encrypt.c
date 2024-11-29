@@ -1,10 +1,10 @@
-#include "a2.h"
+#include "func.h"
 
 #define FILENAME "ciphertext.txt"
 
 void usage()
 {
-	fprintf(stderr, "Error!! Incorrect command line arguments! \n \tTo run program: ./a2encrypt \"(input string)\"\n");
+	fprintf(stderr, "Error!! Incorrect command line arguments! \n \tTo run program: ./encrypt \"(input string)\"\n");
 }
 
 int main(int argc, char **argv) { 
@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
 
     //Find Unique letters
     uniqueLetters(argv[1], inputDictionary);
-    printf("input dictionary: %s\n", inputDictionary);
+    printf("input dictionary: %s (%ld unique characters)\n", inputDictionary, strlen(inputDictionary));
 
     //Initialize empty encryption dictionary
     char encryptionDictionary[strlen(inputDictionary) + 1];
@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
 
     //Encrypt string
     encryptString(inputDictionary, encryptionDictionary, encryptionString);
-    printf("encrypted string: %s\n", encryptionString);
+    printf("encrypted string: %s\n\n", encryptionString);
 
     //Write to file
     FILE* fp = fopen(FILENAME, "w");

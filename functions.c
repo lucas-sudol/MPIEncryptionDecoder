@@ -1,4 +1,4 @@
-#include "a2.h"
+#include "func.h"
 
 //Find unique letters in string and store to array
 void uniqueLetters (char* string, char* uniqueArray) {

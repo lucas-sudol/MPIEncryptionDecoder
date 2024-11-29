@@ -21,13 +21,13 @@ output_csv = "serial_timings_benchmark_results.csv"  # Updated output CSV filena
 
 # Function to create encrypted file for a given input string
 def encrypt_string(input_string):
-    subprocess.run(["./a2encrypt", input_string], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(["./encrypt", input_string], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 # Function to benchmark the decryption
 def benchmark_decrypt():
     start_time = time.perf_counter()
     result = subprocess.run(
-        ["./a2decrypt_serial", cipher_file, dictionary_file],
+        ["./decrypt_serial", cipher_file, dictionary_file],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True

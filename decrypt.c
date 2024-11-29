@@ -1,11 +1,11 @@
-#include "a2.h"
+#include "func.h"
 #include <mpi.h>     
 #include <unistd.h>
 
 
 void usage()
 {
-	fprintf(stderr, "Error!!\n \tTo run program: mpiexec -n (process count )./a2decrypt (cipher txt file) (system dictionary txt file)\n");
+	fprintf(stderr, "Error!!\n \tTo run program: mpiexec -n (process count )./decrypt (cipher txt file) (system dictionary txt file)\n");
 }
 
 int main(int argc, char **argv) { 

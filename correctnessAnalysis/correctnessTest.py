@@ -4,13 +4,13 @@ import subprocess
 test_words = ["cat", "code", "apple", "garden", "freedom", "computer", "attention", "impression"]
 cipher_file = "ciphertext.txt"
 dictionary_file = "american-english"  # Path to the dictionary file
-serial_executable = "./a2decrypt_serial"
-mpi_executable = "./a2decrypt"
+serial_executable = "./decrypt_serial"
+mpi_executable = "./decrypt"
 num_processes = 4  # Number of processes for MPI
 
 # Function to create encrypted file for a given input string
 def encrypt_string(input_string):
-    subprocess.run(["./a2encrypt", input_string], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(["./encrypt", input_string], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 # Function to run the serial decryption and capture output after "Results"
 def run_serial_decrypt():

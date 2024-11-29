@@ -3,20 +3,20 @@ MPI = mpicc
 
 CFLAGS = -Wall -g -std=c99 -O0
 
-all: a2encrypt a2decrypt_serial a2decrypt
+all: encrypt decrypt_serial decrypt
 
 #Encrypt String
-a2encrypt: a2encrypt.c a2functions.o trie.o a2.h
-	$(CC) $(CFLAGS) a2encrypt.c a2functions.o trie.o -o a2encrypt
+encrypt: encrypt.c functions.o trie.o func.h
+	$(CC) $(CFLAGS) encrypt.c functions.o trie.o -o encrypt
 
 #Serial decrypt version
-a2decrypt_serial: a2decrypt_serial.c a2functions.o trie.o a2.h
-	$(CC) $(CFLAGS) a2decrypt_serial.c a2functions.o trie.o -o a2decrypt_serial
+decrypt_serial: decrypt_serial.c functions.o trie.o func.h
+	$(CC) $(CFLAGS) decrypt_serial.c functions.o trie.o -o decrypt_serial
 
 #Parallel version
-a2decrypt: a2decrypt.c a2functions.o trie.o a2.h
-	$(MPI) $(CFLAGS) a2decrypt.c a2functions.o trie.o -o a2decrypt
+decrypt: decrypt.c functions.o trie.o func.h
+	$(MPI) $(CFLAGS) decrypt.c functions.o trie.o -o decrypt
 
 clean:  
-	rm -f a2encrypt a2decrypt_serial a2decrypt ciphertext.txt a2functions.o trie.o
+	rm -f encrypt decrypt_serial decrypt ciphertext.txt functions.o trie.o
 

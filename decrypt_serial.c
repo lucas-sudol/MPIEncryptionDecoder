@@ -1,8 +1,8 @@
-#include "a2.h"
+#include "func.h"
 
 void usage()
 {
-	fprintf(stderr, "Error!!\n \tTo run program: ./a2decrypt_serial (cipher txt file) (system dictionary txt file)\n");
+	fprintf(stderr, "Error!!\n \tTo run program: ./decrypt_serial (cipher txt file) (system dictionary txt file)\n");
 }
 
 int main(int argc, char **argv) { 

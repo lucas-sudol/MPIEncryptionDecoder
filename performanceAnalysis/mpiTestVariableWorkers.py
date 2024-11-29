@@ -12,13 +12,13 @@ output_csv = "mpi_thread_benchmark_results.csv"  # Output CSV filename
 
 # Function to create encrypted file for the test string
 def encrypt_string(input_string):
-    subprocess.run(["./a2encrypt", input_string], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(["./encrypt", input_string], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 # Function to benchmark the decryption with a specified process count
 def benchmark_decrypt(process_count):
     start_time = time.perf_counter()
     result = subprocess.run(
-        ["mpiexec", "-n", str(process_count), "./a2decrypt", cipher_file, dictionary_file],
+        ["mpiexec", "-n", str(process_count), "./decrypt", cipher_file, dictionary_file],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True
