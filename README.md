@@ -38,6 +38,6 @@ Sebastian Kula
 
 
 ## Acknowledgments
-Open source tri library sourced from https://github.com/skeeto
+Open source trie library sourced from https://github.com/skeeto
 
 
