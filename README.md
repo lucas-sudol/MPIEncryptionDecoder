@@ -23,11 +23,11 @@ MPI library
 ### Executing program
 
 * How to build and run the program
-make all
+    make all
 
-./encrypt "(input string)" - provide string to be encrypted
+    ./encrypt "(input string)" - provide string to be encrypted
 
-./decrypt_serial (cipher txt file) (system dictionary txt file)
+    ./decrypt_serial (cipher txt file) (system dictionary txt file)
 
 mpiexec -n (process count) ./a2decrypt (cipher txt file) (system dictionary txt file)
 
@@ -35,7 +35,6 @@ mpiexec -n (process count) ./a2decrypt (cipher txt file) (system dictionary txt 
 ## Author Information
 Lucas Sudol
 Sebastian Kula
-
 
 ## Acknowledgments
 Open source trie library sourced from https://github.com/skeeto
