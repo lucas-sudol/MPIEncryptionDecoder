@@ -1,9 +1,7 @@
-# Project Title
-
-MPI Based Decryption
+# MPI Based String Decryption
 
 ## Description
-Uses MPI to to perform process based scheudling of decryption
+Uses MPI to to perform multi-process based scheudling of decryption.
 
 Workload is divided by giving each process a branch of the permutations, done with a different starting letter in the encrypted dictionary.
 When distributed unevenly, workers with a lower rank in the pool will receive remaining branches.
@@ -38,5 +36,6 @@ Sebastian Kula
 
 ## Acknowledgments
 Open source trie library sourced from https://github.com/skeeto
+
 
 
